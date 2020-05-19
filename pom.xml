@@ -13,6 +13,7 @@
 		<module>spring_01_hello_lx</module>
 		<module>springmvc-02</module>
     <module>springmvc-03</module>
+    <module>springmvc-04-param</module>
   </modules>
 	<!-- 作用:管理依赖jar包 但是不引入依赖,由子工程自己去引入 -->
 	<dependencyManagement>
