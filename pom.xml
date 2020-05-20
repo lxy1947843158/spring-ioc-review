@@ -14,7 +14,8 @@
 		<module>springmvc-02</module>
     <module>springmvc-03</module>
     <module>springmvc-04-param</module>
-  </modules>
+    <module>springmvc-05-car</module>
+	</modules>
 	<!-- 作用:管理依赖jar包 但是不引入依赖,由子工程自己去引入 -->
 	<dependencyManagement>
 		<!-- jar包依赖 -->
@@ -49,6 +50,22 @@
 				<artifactId>jackson-databind</artifactId>
 				<version>2.9.5</version>
 			</dependency>
+			
+			<dependency><!-- thymeleaf -->
+				<groupId>org.thymeleaf</groupId>
+				<artifactId>thymeleaf</artifactId>
+				<version>3.0.11.RELEASE</version>
+			</dependency>
+			
+			<dependency><!-- thymeleaf-spring5 -->
+				<groupId>org.thymeleaf</groupId>
+				<artifactId>thymeleaf-spring5</artifactId>
+				<version>3.0.11.RELEASE</version>
+			</dependency>
+			
+			
+			
+			
 		</dependencies>
 	</dependencyManagement>
 
