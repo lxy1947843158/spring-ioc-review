@@ -37,6 +37,18 @@
 				<version>5.2.2.RELEASE</version>
 			</dependency>
 
+			<dependency><!-- 工具插件 代替实体类的getter/setter -->
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok</artifactId>
+				<version>1.18.10</version>
+				<scope>provided</scope>
+			</dependency>
+			
+			<dependency><!-- jackson 传递参数 -->
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>2.9.5</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

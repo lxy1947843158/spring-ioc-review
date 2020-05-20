@@ -28,8 +28,8 @@ public class SimpleController {
 	@RequestMapping(value="/simple",method= {RequestMethod.GET})
 	public ModelAndView simple(@RequestParam(required = false,defaultValue = "666") int id,@RequestParam(required = false,defaultValue = "lxy") String name) {
 		
-		System.err.println("id param==>"+id);
-		System.err.println("name param==>"+name);
+		System.out.println("id param==>"+id);
+		System.out.println("name param==>"+name);
 		ModelAndView mv =new ModelAndView();
 		mv.addObject("result","ModelAndView 传值==>name="+name+" id="+id);
 		mv.setViewName("param");
