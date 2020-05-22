@@ -35,6 +35,10 @@
 	<button type="button" onclick="jsonTolist()">测试jsonToList</button>
 	<hr />
 	<button type="button" onclick="jsonTobean()">测试jsonTobean</button>
+	
+	
+	
+	
 	<script src="${pageContext.request.contextPath}/static/js/jquery-1.10.2.js"></script>
 	<script type="text/javascript">
 		const path="${pageContext.request.contextPath}"
@@ -103,9 +107,8 @@
 				data:JSON.stringify(obj),
 				success:function(data){
 					alert(data.msg+' ~~~~  '+data.code);
-				}			
-				
-			})
+				}					
+			});
 			
 			
 		}
