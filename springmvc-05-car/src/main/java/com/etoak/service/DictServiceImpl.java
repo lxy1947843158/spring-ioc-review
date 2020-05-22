@@ -1,0 +1,21 @@
+package com.etoak.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.etoak.bean.Dict;
+import com.etoak.mapper.DictMapper;
+
+@Service
+public class DictServiceImpl implements DictService {
+	@Autowired
+	DictMapper dictMapper;
+	
+	@Override
+	public List<Dict> queryList(String groupId) {
+		return dictMapper.queryList(groupId);
+	}
+
+}

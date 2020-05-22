@@ -6,5 +6,66 @@
 </head>
 	<body>
 		<h2>首页</h2>
+		<hr />
+		<h2>从request范围取值</h2>
+		<span th:text="${user.id}">aaa</span>
+		<br />
+		<span th:text="${user.name}">aaa</span>
+		<hr />
+		<h2>从session范围取值</h2>
+		<span th:text="${session.sessionUser.id}">aaa</span><br />
+		<span th:text="${session.sessionUser.name}">aaa</span>
+		<hr />
+		<h2>遍历userList</h2>
+		<table border="1px">
+			<thead >
+				<tr>
+					<td>id</td>
+					<td>name</td>
+					<td>age</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="user,stat:${userList}">
+					<td><span th:text="${user.id}"></span></td>
+					<td><input readonly th:value="${user.name}"></td>
+					<td><input readonly th:value="${user.age}"></td>
+				</tr>
+			</tbody>
+		</table>
+		<hr />
+		<form th:action="@{/add}">
+			<input type="text" name="name">
+			<br />
+			<input type="submit" value="提交">
+		</form>
+		<br />
+		<a th:href="@{/add(name=get)}">Get请求传递参数</a>
+		<hr />
+		<button type="button" onclick="json()">测试Ajax</button>
+		<script th:src="@{/static/js/jQuery/jquery-1.10.2.js}"></script>
+		<script th:inline="javascript" type="text/javascript">
+			const path=/*[[${#request.getContextPath()}]]*/
+		function json() {
+			$.ajax({
+				url:path+'/json',
+				type:'post',
+				data:JSON.stringify({name: 'zs'}),
+				dataType:'text',
+				contentType:'application/json;charset=utf-8',
+				success:function(data){
+					alert(data);
+				}
+			})
+		}
+		
+		
+		</script>
+		
+		
+		
+		
+		
+		
 	</body>
 </html>
