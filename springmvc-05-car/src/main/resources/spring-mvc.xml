@@ -13,8 +13,10 @@ xmlns:mvc="http://www.springframework.org/schema/mvc"
 	<context:component-scan base-package="com.etoak">
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 		<context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.RestController"/>
+		<context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+		
 	</context:component-scan>
 	
 	<!-- 开启springmvc配置 -->
@@ -26,7 +28,7 @@ xmlns:mvc="http://www.springframework.org/schema/mvc"
 	<bean id="templateresolver" class="org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver">
 		<property name="prefix" value="/templates/"></property>
 		<property name="suffix" value=".html"></property>
-		<property name="characterEncoding" value="utf-8"></property>
+		<property name="characterEncoding" value="UTF-8"></property>
 		<property name="templateMode" value="HTML"></property>
 		<property name="cacheable" value="false"></property>
 	</bean>
@@ -37,7 +39,7 @@ xmlns:mvc="http://www.springframework.org/schema/mvc"
 	
 	<bean class="org.thymeleaf.spring5.view.ThymeleafViewResolver">
 		<property name="templateEngine" ref="templateEngine"></property>
-		<property name="characterEncoding" value="utf-8"></property>
+		<property name="characterEncoding" value="UTF-8"></property>
 	</bean>
 	
 	<!-- 文件解析器 -->

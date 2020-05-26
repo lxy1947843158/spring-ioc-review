@@ -9,5 +9,5 @@
 		select id,group_id as groupId,name,value,sort from t_springmvc_dict where group_id=#{value}
 		order by sort
 	</select>
- 
+
 </mapper>

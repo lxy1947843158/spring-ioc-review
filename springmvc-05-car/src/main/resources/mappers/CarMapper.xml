@@ -4,11 +4,96 @@
 <mapper namespace="com.etoak.mapper.CarMapper">
    
 
-  <insert id="addCar" parameterType="com.etoak.bean.Car">
+  <insert id="addCar" parameterType="com.etoak.bean.Car" >
   	insert into t_springmvc_car (brand,series,price,licensing_time,level,
   	bsbox,output,mileage,location,pic,summary,create_time) values 
   	(#{brand},#{series},#{price},#{licensingTime},#{level},#{bsbox},#{output},#{mileage},#{location},#{pic},#{summary},NOW())
-  
   </insert>
  
+
+ <!-- <select id="queryAllCar" resultType="com.etoak.bean.Car" >
+ 	select brand,series,location,summary,mileage,licensing_time as licensingTime, pic,price,create_time as createTime from t_springmvc_car 
+ </select> -->
+ 
+  <select id="getAllBrand"  resultType="string">
+  	select brand from t_springmvc_car group by brand
+  </select>
+ 
+  <select id="querySeriesByBrand"  resultType="string">
+  	select series from t_springmvc_car 
+  	<where>
+  		<if test="brand !=null and brand !='' ">
+  			brand = #{brand}
+  		</if>
+  	</where>
+  	group by series
+  	
+  		<if test="brand ==null or brand =='' ">
+  			limit 10
+  		</if>
+  </select>
+  
+  <select id="queryPriceBySerices"  resultType="string">
+  	select price from t_springmvc_car where series = #{series}
+  </select>
+  <select id="queryAllCar" resultType="com.etoak.bean.CarVo" parameterType="com.etoak.bean.CarVo" >
+  	select 
+	t.id,
+	t.brand,
+	t.series,
+	t.price,
+	t.licensing_time as licensingTime,
+	t.level,
+  t.bsbox,
+	t.output,
+	t.mileage,
+	t.location,
+	t.pic,
+	t.summary,
+	t.create_time as createTime,
+	t2.name as levelName,
+	t3.name as bsboxName,
+	t4.name as outputName
+	FROM t_springmvc_car t left join t_springmvc_dict t2 on t.level = t2.value AND t2.group_id = 'level'
+	left join t_springmvc_dict t3 on t.bsbox =t3.value AND t3.group_id='bsbox'
+	left join t_springmvc_dict t4 on t.bsbox =t4.value AND t4.group_id='output'
+	<where>
+		<if test="brand !=null and brand != ''">
+			and brand =#{brand}
+		</if>
+		<if test="series !=null and series != ''">
+			and series =#{series}
+		</if>
+		<if test="level !=null and level != ''">
+			and level =#{level}
+		</if>
+		<if test="bsbox !=null and bsbox != ''">
+			and bsbox =#{bsbox}
+		</if>
+		<if test="output !=null and output != ''">
+			and output =#{output}
+		</if>
+		<if test="location !=null and location != ''">
+			and location like concat('%',#{location},'%')
+		</if>
+		<if test="priceMapList != null and  priceMapList.size() != 0 ">
+			and
+			<foreach collection="priceMapList" item="priceMap" open="(" close=")" separator="or">
+				price between #{priceMap.start} and #{priceMap.end}
+			</foreach>
+		</if>
+		<if test="startYear != null and startYear !=0">
+			and str_to_date(licensing_time,'%Y-%m') >= date_sub(curdate(),interval #{startYear} year)
+		</if>
+		<if test="endYear != null and endYear !=0">
+			and str_to_date(licensing_time,'%Y-%m') &lt;= date_sub(curdate(),interval #{endYear} year)
+		</if>
+	</where>
+  </select>
+  
+  <!-- 	SELECT 
+	PERIOD_DIFF(date_format( NOW( ), '%Y%m' ),date_format( STR_TO_DATE( licensing_time , '%Y-%m' ), '%Y%m' ))
+FROM
+	t_springmvc_car;
+  -->
 </mapper>
