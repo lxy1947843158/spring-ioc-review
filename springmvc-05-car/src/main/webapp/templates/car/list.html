@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link th:href="@{/static/bootstrap/css/bootstrap.min.css}" rel="stylesheet"> 
+<title>列表展示</title>
+
+</head>
+
+<body>
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingOne">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+         	=======条件查询=======
+        </a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+        		<div id="tj">
+			品牌:<div id='brand'></div>
+			<br />
+			车系:<div id='series'></div>
+			<br />
+			价格:<div id='dictprice'></div>
+			<br />
+			车龄:<div id='carage'></div>
+			<br />
+			<div id="a">
+		      级别:<select  name="level" id="level">
+		      	<option value='-1'>====请选择====</option>
+		      </select>
+		      &nbsp;&nbsp;&nbsp;&nbsp;
+		      变速箱:<select  name="bsbox" id="bsbox">
+		      	<option value='-1'>====请选择====</option>
+		      </select>
+	    	</div>
+	    	<br /><br />
+	    	<div id="b">
+		     排量:<select  name="output" id="output">
+	      	<option value='-1'>====请选择====</option>
+	      	</select>
+	      	&nbsp;&nbsp;&nbsp;&nbsp;
+		     归属地: <!-- <select  name="location" id="location">
+		      	<option value='-1'>====请选择====</option>
+		      </select> -->
+		      <input type="text" name="location" id="location">
+	    	</div>
+	    	<br />
+	    	<button type="reset" onclick="clearAll()" class="btn btn-primary">清空筛选</button>
+		</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+	<div class="container-fluid">
+		<center>
+	  	<div class="row" id="listCar">
+			 
+		</div>
+		<br />
+		<div id="buttonid">
+			<button id="first" class="btn btn-primary" type="button">首页</button>
+			<button id="pre" class="btn btn-success" type="button">上一页</button>
+			<button id="next" class="btn btn-warning" type="button">下一页</button>
+			<button id="last" class="btn btn-danger" type="button">末页</button>
+		</div>
+		</center>
+</div>
+
+
+
+
+
+
+<script th:src="@{/static/js/jQuery/jquery-1.10.2.js}"></script>
+<script th:src="@{/static/bootstrap/js/bootstrap.min.js}"></script>
+<script th:inline="javascript"  type="text/javascript">
+//定义contextPath
+const path=/*[[${#request.getContextPath()}]]*/
+let pageNum,pageSize = 8;
+let currentPage =1;
+let pageCount = '';
+let brand_val='';
+let series_val='';
+
+let level_val='';
+let bsbox_val='';
+let output_val='';
+let location_val ='';
+
+		//清空筛选
+		function clearAll() {
+			window.location.reload();//刷新当前页面 1.第一种方法
+			
+			//2.第二种方法  重新查一遍所有的数据
+			/* queryAllBrand();
+			listAllSeries();
+			et1911.queryAllCar();
+			et1911.querySelectDict('level');
+			et1911.querySelectDict('output');
+			et1911.querySelectDict('bsbox'); */
+		//	et1911.querySelectDict('dictprice');
+		}
+	$(function () {
+		queryAllBrand();//查询所有的品牌
+		listAllSeries();//查询所有的车系
+		et1911.queryAllCar();//查询所有的车
+		et1911.querySelectDict('level');//查询下拉框的级别
+		et1911.querySelectDict('output');//查询下拉框的排量
+		et1911.querySelectDict('bsbox');//查询下拉框的变速箱
+		et1911.queryPriceDict();//查询展示页面上的价格区间
+		et1911.queryCarageDict();//查询展示页面上的车龄区间
+		$("input[name='dictprice']").change(function() {
+			et1911.queryAllCar(pageNum,pageSize);
+		})
+		$('#carage').change(function() {
+			et1911.queryAllCar(pageNum,pageSize);
+		})
+		
+		//分页按钮
+		$('#first').on("click",function () {
+			et1911.queryAllCar();
+		});
+		$('#pre').on("click",function () {
+			et1911.queryAllCar(--currentPage);
+		});
+		$('#next').on("click",function ()  {
+			et1911.queryAllCar(++currentPage);
+		});
+		$('#last').on("click",function () {
+			et1911.queryAllCar(pageCount);
+		});
+		 
+	})
+	function listAllSeries() {
+		let list_series='';
+		$.ajax({
+			url:path+'/car/listseries',
+			type:'post',
+			data:'',
+			dataType:'json',
+			success:function(data){
+				for(let s of data){
+					list_series +=`<button class="btn btn-warning" type="button" onclick="queryPriceBySerices('${s}')">${s}</button>`;
+				}
+				$('#series').html(list_series)
+			}
+		})
+	}
+	
+	//onchange事件
+	$('#level').change(function() {
+		level_val =$('#level').val();
+		 et1911.queryAllCar(pageNum,pageSize);
+	})
+	$('#bsbox').change(function() {
+		bsbox_val =$('#bsbox').val();
+		 et1911.queryAllCar(pageNum,pageSize);
+	})
+	$('#output').change(function() {
+		output_val =$('#output').val();
+		et1911.queryAllCar(pageNum,pageSize);
+	})
+	$('#location').blur(function() {
+		location_val =$('#location').val();
+		et1911.queryAllCar(pageNum,pageSize);
+	})
+	
+	//查询所有的品牌
+	function queryAllBrand() {
+		let button_brand='';
+		$.ajax({
+			url:path+'/car/brand',
+			type:'get',
+			data:'',
+			dataType:'json',
+			success:function(data){
+				for(let b of data){
+					button_brand +=`<button class="btn btn-success" type="button" onclick="querySeriesByBrand('${b}')">${b}</button>`;	
+				}
+				$('#brand').html(button_brand);
+			}
+		});
+	}
+	//根据品牌查车系 点击品牌按钮
+	  function querySeriesByBrand(brand) {
+		  series_val='';
+		  brand_val = brand;
+		  
+			let button_series='';
+			$.ajax({
+				url:path+'/car/series',
+				type:'post',
+				data:{brand:brand},
+				dataType:'json',
+				success:function(data){
+					for(let s of data){
+						button_series +=`<button class="btn btn-warning" type="button" onclick="queryPriceBySerices('${s}')">${s}</button>`;
+					}
+					$('#series').html(button_series)
+				}
+			})
+			  et1911.queryAllCar(pageNum,pageSize);//,brand_val
+		}
+	//点击车系的按钮
+	function queryPriceBySerices(series) {
+		
+		series_val=series;
+		//alert('车型 '+series_val)
+		/* let button_price='';
+		$.ajax({
+			url:path+'/car/price',
+			type:'post',
+			data:{series:series},
+			dataType:'json',
+			success:function(data){
+				for(let p of data){
+		
+					if(p.price - 50 > 0){
+						button_price +=`<button class="btn btn-danger" type="button" >50万以上</button>`;	
+					}else if(p.price - 20 >= 0){
+						button_price +=`<button class="btn btn-danger" type="button" >20万~50万</button>`;	
+					}else if(p.price - 10 >= 0){
+						button_price +=`<button class="btn btn-danger" type="button" >10万~20万</button>`;	
+					}else if(p.price -8 >=0){
+						button_price +=`<button class="btn btn-danger" type="button" >8万~10万</button>`;	
+					}else if(p.price - 5 >= 0){
+						button_price +=`<button class="btn btn-danger" type="button" >5万~8万</button>`;	
+					}else{
+						button_price +=`<button class="btn btn-danger" type="button" >3万元以下</button>`;	
+					}
+					
+				}
+				$('#price').html(button_price)
+			}
+		}) */
+		 et1911.queryAllCar(pageNum,pageSize);//,brand_val,series_val
+	}
+	
+	et1911={
+			//查询字典表里的价格~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			queryPriceDict: function(){
+				$.ajax({
+					url:path+'/dict/dictprice',
+					type:'get',
+					data:'',
+					dataType:'json',
+					async:false,
+					success:function(data){
+						let checkbox ="";
+						for(let p of data){
+							checkbox +=`<label class="checkbox-inline"><input type="checkbox" value="${p.value}" name="dictprice">${p.name}</label>`;
+						}
+						$('#dictprice').html(checkbox);
+					}
+				})
+			},
+			//查询字典表里的车龄~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			queryCarageDict: function(){
+				$.ajax({
+					url:path+'/dict/carage',
+					type:'get',
+					data:'',
+					dataType:'json',
+					async:false,
+					success:function(data){
+						let radio ="";
+						for(let a of data){
+							radio +=`<label class="radio-inline"><input type="radio" value="${a.value}" name="carage">${a.name}</label>`;
+						}
+						$('#carage').html(radio);
+					}
+				})
+			},
+		//查询级别和排量和变速箱
+		querySelectDict: function (groupId) {
+			if(groupId){
+				$.ajax({
+					url:path+'/dict/'+groupId,
+					type:'get',
+					data:'',
+					dataType:'json',
+					success:function(data){
+						let options ="<option value='-1'>====请选择====</option>";
+						for(let d of data){
+							options +="<option value='"+d.value+"'>"+d.name+"</option>";
+						}
+						$('#'+groupId).html(options);
+					}
+				})
+			}
+		},
+			queryAllCar: function(pageNum,pageSize) {//,brand_val,series_val
+				pageNum = pageNum || 1;
+				pageSize = pageSize || 8;
+				brand_val = brand_val || '';
+				series_val=series_val || '';
+				level_val =level_val || '';
+				bsbox_val = bsbox_val || '';
+				output_val = output_val || '';
+				location_val =location_val || '';
+				let dictprice_val=[];
+				$("input[name='dictprice']:checked").each(function() {
+					dictprice_val.push(this.value)
+				})	
+				dictprice_val =dictprice_val || '';
+				let carage_val=$("input[name='carage']:checked").val() || '';
+				let div_car='';
+				let options ="<option value='-1'>====请选择====</option>";
+				
+				$.ajax({
+					url: path+'/car/list',
+					type:'get',
+					data:'pageNum='+pageNum+'&pageSize='+pageSize+'&brand='+brand_val+'&series='+series_val+'&level='+level_val+'&bsbox='+bsbox_val+'&output='+output_val+'&location='+location_val+'&priceList='+dictprice_val+'&carage='+carage_val,
+					dataType:'json',
+					success: function(data){
+						//当前页
+						currentPage =data.pageNum;
+						//总页数
+						pageCount = data.pageCount;
+						let array_brand =[];
+						let array_location=[];
+						for(let c of data.rows){
+							div_car +='<div class="col-md-3"><img alt="帅气跑车" title="'+c.brand+'" width="200px" height="150px" src="'+path+c.pic+'"><br><div>'+c.brand+"~~"+c.series+'</div><div>'+c.summary+'</div><div>排量:'+c.outputName+'</div><span style="color:#7A7A7A">里程:'
+							+c.mileage+'(万公里)</span><span style="color:#7A7A7A">/'+c.licensingTime+'</span><span style="color:#7A7A7A">/'+c.location+'</span><br><div style="color:#ff0000" id="priceid">价格(万元):'+c.price+'</div></div>';
+							if(array_location.indexOf(c.location)==-1){
+								array_location.push(c.location)
+							}		
+							/* if(array_brand.indexOf(c.brand)==-1){
+									array_brand.push(c.brand);
+							}	 */
+						}
+						for(let l of array_location){
+							options +="<option value='"+l+"'>"+l+"</option>";		
+						}
+						/* for(let b of array_brand){
+							button_brand +=`<button class="btn btn-success" type="button" onclick="querySeriesByBrand('${b}')">${b}</button>`;	
+						} */
+						$('#listCar').html(div_car);
+						$('#location').html(options);
+						
+						 if(data.isfirst){
+							$('#first').attr('disabled','disabled');
+							$('#pre').attr('disabled','disabled');
+						} else{
+							$('#first').removeAttr('disabled');
+							$('#pre').removeAttr('disabled');
+						}
+						 //
+						 if(data.islast){
+								$('#next').attr('disabled','disabled');
+								$('#last').attr('disabled','disabled');
+							} else{
+								$('#next').removeAttr('disabled');
+								$('#last').removeAttr('disabled');
+							}
+					}
+				})
+			}
+	}
+	
+
+
+</script>
+</body>
+</html>

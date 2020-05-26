@@ -121,6 +121,13 @@
 				<artifactId>commons-fileupload</artifactId>
 				<version>1.3.3</version>
 			</dependency>
+			
+			<!-- 后端校验 hibernate-validator -->
+			<dependency>
+				<groupId>org.hibernate.validator</groupId>
+				<artifactId>hibernate-validator</artifactId>
+				<version>6.1.2.Final</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
