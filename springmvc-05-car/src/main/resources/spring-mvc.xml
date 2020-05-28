@@ -16,7 +16,6 @@ xmlns:mvc="http://www.springframework.org/schema/mvc"
 		<context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
-		
 	</context:component-scan>
 	
 	<!-- 开启springmvc配置 -->
@@ -24,6 +23,10 @@ xmlns:mvc="http://www.springframework.org/schema/mvc"
 	<!-- 将静态资源(css,js)等交给servlet容器内置的名字叫default 的 servlet处理 -->
 	<mvc:default-servlet-handler/>
 	<mvc:resources location="file:e:/LG/upload/" mapping="/pic/**"></mvc:resources>
+	<!-- 跳转到index.html -->
+	<mvc:view-controller path="/" view-name="index" />
+	<mvc:view-controller path="/user/toLogin" view-name="login"/>
+	
 	<!-- 整合thymeleaf -->
 	<bean id="templateresolver" class="org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver">
 		<property name="prefix" value="/templates/"></property>
@@ -46,5 +49,14 @@ xmlns:mvc="http://www.springframework.org/schema/mvc"
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 	<property name="maxUploadSize" value="2097152"></property>
 	</bean>
-		
+		<mvc:interceptors>
+			<mvc:interceptor>
+				<mvc:mapping path="/**"/>
+				<mvc:exclude-mapping path="/static/**"/>
+				<mvc:exclude-mapping path="/code"/>
+				<mvc:exclude-mapping path="/user/toLogin"/>
+				<mvc:exclude-mapping path="/user/login"/>
+				<bean class="com.etoak.interceptor.LoginIntercaptor"></bean>
+			</mvc:interceptor>
+		</mvc:interceptors>
 	</beans>
