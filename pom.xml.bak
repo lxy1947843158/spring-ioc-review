@@ -17,7 +17,6 @@
 		<module>springmvc-03</module>
 		<module>springmvc-04-param</module>
 		<module>springmvc-05-car</module>
-		<module>et1911-activeMQ</module>
 	</modules>
 	<!-- 作用:管理依赖jar包 但是不引入依赖,由子工程自己去引入 -->
 	<dependencyManagement>
@@ -128,12 +127,6 @@
 				<groupId>org.hibernate.validator</groupId>
 				<artifactId>hibernate-validator</artifactId>
 				<version>6.1.2.Final</version>
-			</dependency>
-			<!-- 密码加密 -->
-			<dependency>
-				<groupId>commons-codec</groupId>
-				<artifactId>commons-codec</artifactId>
-				<version>1.13</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
